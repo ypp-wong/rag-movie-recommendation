@@ -32,6 +32,9 @@ Do not generate answers that don't use the sources below.
 Query: {query}
 """
 
+@app.get('/')
+def read_root():
+    return {"hello": "world!"}
 
 @app.post('/rag')
 async def rag(query):
