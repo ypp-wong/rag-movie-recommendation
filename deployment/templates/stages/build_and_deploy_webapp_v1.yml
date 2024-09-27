@@ -1,0 +1,51 @@
+parameters:
+  - name: pythonVersion
+    type: string
+  - name: packageName
+    type: string
+  - name: baseDirectory
+    type: string
+  - name: srcPath
+    type: string
+  - name: testsPath
+    type: string
+  - name: appName
+    type: string
+  - name: azureSubscription
+    type: string
+  - name: environment
+    type: string
+
+stages:
+  # - stage: Test
+  #   jobs:
+  #     - job: Unit_test
+  #       displayName: 'Run Unit Tests - Python'
+  #       steps:
+  #         - template: ../steps/unit_testing_v1.yml
+  #           parameters:
+  #             baseDirectory: ${{parameters.baseDirectory}}
+  #             srcPath: ${{parameters.srcPath}}
+  #             testsPath: ${{parameters.testsPath}}
+  #             pythonVersion: ${{parameters.pythonVersion}}
+  
+  - stage: Build
+    jobs:
+      - job: BuildArtifacts
+        displayName: Build the deployment artifacts for Azure FunctionApp
+        steps:
+          - template: ../steps/build_webapp_artifacts_v1.yml
+            parameters:
+              baseDirectory: ${{parameters.baseDirectory}}
+              packageName: ${{parameters.packageName}}
+              pythonVersion: ${{parameters.pythonVersion}}
+  
+  - stage: Deploy
+    jobs:
+      - template: ../jobs/deploy_webapp_v1.yml
+        parameters:
+          appName: ${{parameters.appName}}
+          azureSubscription: ${{parameters.azureSubscription}}
+          environment: ${{parameters.environment}}
+          packageName: ${{parameters.packageName}}
+          pythonVersion: ${{parameters.pythonVersion}}

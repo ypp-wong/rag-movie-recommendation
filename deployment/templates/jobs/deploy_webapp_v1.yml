@@ -1,0 +1,28 @@
+parameters:
+  - name: appName
+    type: string
+  - name: azureSubscription
+    type: string
+  - name: packageName
+    type: string
+  - name: environment
+    type: string
+  - name: pythonVersion
+    type: string
+
+jobs:
+  - deployment: DeployWebApp
+    environment: ${{ parameters.environment }}
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - download: current
+              artifact: drop
+              displayName: "Download build artifacts"
+            - template: ../steps/deploy_webapp_python_v1.yml
+              parameters:  
+                appName: ${{ parameters.appName }}
+                azureSubscription: ${{ parameters.azureSubscription }}
+                packageName: ${{parameters.packageName}}
+                pythonVersion: ${{parameters.pythonVersion}}

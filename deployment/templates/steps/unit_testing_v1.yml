@@ -1,0 +1,49 @@
+parameters:
+  - name: pythonVersion
+    type: string
+  - name: baseDirectory
+    type: string
+  - name: srcPath
+    type: string
+  - name: testsPath
+    type: string
+
+steps:
+  - task: UsePythonVersion@0
+    displayName: Use Python $(parameters.pythonVersion)
+    inputs:
+      versionSpec: ${{parameters.pythonVersion}}
+
+  - script: pip install -r requirements.txt
+    displayName: "Install dependencies"
+
+  # Lint via pylint. We need to find all .py files under src/simple_package and run pylint to avoid errors
+  # - bash: find ${{parameters.srcPath}} ${{parameters.testsPath}} -type f -name "*.py" | xargs pylint
+  #   displayName: "Linting: pylint"
+
+  # # Lint via flake8. flake8 has better discovery, so we can invoke it directly
+  # - bash: flake8
+  #   displayName: "Linting: flake8"
+  #   workingDirectory: ${{parameters.srcPath}}
+
+  # Run tests with coverage.
+  - bash: |
+      export PYTHONPATH="${{parameters.baseDirectory}}:$PYTHONPATH"
+      pytest --doctest-modules --junitxml=junit/test-results.xml --cov=${{parameters.srcPath}} --cov-report xml:coverage.xml
+    displayName: Run tests with coverage
+    workingDirectory: ${{parameters.testsPath}}
+  
+  #Publish the test results in DevOps
+  - task: PublishTestResults@2
+    displayName: 'Publish test result'
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/test-*.xml'
+      failTaskOnFailedTests: true
+
+  # Publish the coverage report
+  - task: PublishCodeCoverageResults@1
+    displayName: 'Publish code coverage'
+    inputs:
+      codeCoverageTool: 'Cobertura'
+      summaryFileLocation: "${{parameters.baseDirectory}}/**/coverage.xml"

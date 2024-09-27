@@ -1,0 +1,31 @@
+parameters:
+  - name: baseDirectory
+    type: string
+  - name: packageName
+    type: string
+  - name: pythonVersion
+    type: string
+
+steps:
+  # - script: pip install -t .python_packages/lib/site-packages -r requirements.txt
+  #   displayName: "Install dependencies"
+  - task: UsePythonVersion@0
+    displayName: Use Python $(parameters.pythonVersion)
+    inputs:
+      versionSpec: ${{parameters.pythonVersion}}
+  - script: |
+        python -m .venv antenv
+        source antenv/bin/activate
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    workingDirectory: ${{parameters.baseDirectory}}
+    displayName: "Install requirements"
+  - script: |
+      cd ${{parameters.baseDirectory}}
+      zip -r ${{parameters.packageName}}.zip . \
+        -x '.git/*' '.idea/*' '.vscode/*' '*/__pycache__/*' '*/.gitignore' \
+        '*/.funcignore' '.env.example' 'azure-pipelines.yml' 'README.md'
+    displayName: "Create zip"
+  - publish: ${{parameters.packageName}}.zip
+    displayName: 'Publish Artifact'
+    artifact: drop

@@ -1,0 +1,24 @@
+trigger:
+  branches:
+    include:
+      - features/RAG-*
+      - dev
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  - group: 'Webapp-RAG-DEV'
+  - name: applicationRootDirectory
+    value: $(System.DefaultWorkingDirectory)
+
+extends:
+  template: ./templates/stages/build_and_deploy_webapp_v1.yml
+  parameters:
+    baseDirectory: '$(applicationRootDirectory)'
+    packageName: $(applicationPackageName)
+    srcPath: $(applicationRootDirectory)
+    testsPath: $(applicationRootDirectory)/tests
+    pythonVersion: $(pythonVersion)
+    appName: $(webAppName)
+    azureSubscription: $(serviceConnectionName)
+    environment: $(devopsEnvironment)
