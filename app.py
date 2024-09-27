@@ -44,9 +44,4 @@ async def rag(query):
         ],
         model="gpt4o-for-scaling"
     )
-    return response.choices[0].message.content
-
-
-if __name__ == '__main__':
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    return {"answer": response.choices[0].message.content}
