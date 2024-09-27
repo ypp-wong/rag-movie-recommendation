@@ -29,13 +29,3 @@ steps:
       appName: ${{ parameters.appName }}
       package: "$(Pipeline.Workspace)/drop/${{parameters.packageName}}.zip"
       deploymentMethod: 'zipDeploy'
-      appSettings: >-
-        -SA_COMMENTS_ENDPOINT_URL $(SA_COMMENTS_ENDPOINT_URL)
-        -SA_DATA_LAKE_ENDPOINT_URL $(SA_DATA_LAKE_ENDPOINT_URL)
-        -SA_STAGING_ENDPOINT_URL $(SA_STAGING_ENDPOINT_URL)
-        -COMMENTS_CONTAINER $(SA_CONTAINER_NAME_COMMENTS)
-        -JSON_TABLES_CONTAINER $(SA_CONTAINER_NAME_JSON_TABLES)
-        -CACHE_CONTAINER $(SA_CONTAINER_NAME_CACHE)
-        -CLIENT_SECRET $(SP_APP_SECRET)
-        -CLIENT_ID $(SP_APP_ID)
-        -TENANT_ID $(TENANT_ID)
