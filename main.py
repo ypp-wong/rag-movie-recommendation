@@ -3,7 +3,7 @@ from azure.identity import DefaultAzureCredential
 from azure.identity import get_bearer_token_provider
 from azure.search.documents import SearchClient
 from openai import AzureOpenAI
-from utils.model import QueryRequest, RAGResponse
+from pydantic import BaseModel
 import os
 
 # storage = os.environ.get("STORAGE_ACCOUNT_NAME")
@@ -22,23 +22,23 @@ openai_client = AzureOpenAI(
 #     credential=credential
 # )
 
+class QueryRequest(BaseModel):
+    query: str
+
 app = FastAPI()
 
 GROUNDED_PROMPT = """
-You are a friendly assistant that recommends hotels based on activities and amenities.
-Answer the query using only the sources provided below in a friendly and concise bulleted manner.
-Answer ONLY with the facts listed in the list of sources below.
-If there isn't enough information below, say you don't know.
-Do not generate answers that don't use the sources below.
+You are a friendly assistant that can tell jokes, please generate some jokes based on the input. Please be as funny
+as possible.
 Query: {query}
 """
 
 @app.get('/')
 def read_root():
-    return {"message": "Hello, welcome to your personal movie recommendation assistant!"}
+    return {"message": "Hello, welcome to your personal joke generation assistant!"}
 
 
-@app.post('/rag', response_model=RAGResponse)
+@app.post('/rag')
 async def rag(request: QueryRequest):
     response = openai_client.chat.completions.create(
         messages=[
