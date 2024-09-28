@@ -16,6 +16,7 @@ openai_client = AzureOpenAI(
     api_key="82446626c4644fda89a49f04d8c71f7d"
 )
 
+
 # search_client = SearchClient(
 #     endpoint="https://ai-search-4-scaling.search.windows.net",
 #     index_name="movie-indexer",
@@ -25,6 +26,7 @@ openai_client = AzureOpenAI(
 class QueryRequest(BaseModel):
     query: str
 
+
 app = FastAPI()
 
 GROUNDED_PROMPT = """
@@ -32,6 +34,7 @@ You are a friendly assistant that can tell jokes, please generate some jokes bas
 as possible.
 Query: {query}
 """
+
 
 @app.get('/')
 def read_root():
