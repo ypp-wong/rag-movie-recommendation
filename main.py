@@ -3,6 +3,7 @@ from azure.identity import DefaultAzureCredential
 from azure.identity import get_bearer_token_provider
 from azure.search.documents import SearchClient
 from openai import AzureOpenAI
+from utils.model import QueryRequest, RAGResponse
 import os
 
 # storage = os.environ.get("STORAGE_ACCOUNT_NAME")
@@ -34,15 +35,16 @@ Query: {query}
 
 @app.get('/')
 def read_root():
-    return {"hello": "world!"}
+    return {"message": "Hello, welcome to your personal movie recommendation assistant!"}
 
-@app.post('/rag')
-async def rag(query):
+
+@app.post('/rag', response_model=RAGResponse)
+async def rag(request: QueryRequest):
     response = openai_client.chat.completions.create(
         messages=[
             {
                 "role": "user",
-                "content": GROUNDED_PROMPT.format(query=query)
+                "content": GROUNDED_PROMPT.format(query=request.query)
             }
         ],
         model="gpt4o-for-scaling"
