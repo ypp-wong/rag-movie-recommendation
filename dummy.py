@@ -33,14 +33,17 @@ search_options = {
     "top": 3,  # Retrieve top 10 results (Top K)
     "search_mode": SearchMode.ANY,  # Use 'ALL' to match all search terms, or 'ANY' to match any search term
     "query_type": "full",  # Use 'simple' or 'full' depending on your need for structured queries
+    "select": ["title", "fullplot", "countries"],
     "vector_queries": [
         VectorizedQuery(vector=generate_embedding(query), kind="vector", k_nearest_neighbors=3,
                         fields="vector")]
 }
 
 # Search the index
-results = search_client.search(search_text=query, **search_options)
+results = search_client.search(**search_options)
 
-# Iterate through the results and display the data
+retrieved_documents = []
 for result in results:
-    print(f"Document: {result}")
+    retrieved_documents.append(result)
+
+print(retrieved_documents)
