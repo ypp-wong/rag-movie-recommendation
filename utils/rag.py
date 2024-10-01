@@ -29,7 +29,7 @@ class RAGService:
     def search_documents(self, query: str):
         search_options = {
             "top": SearchConfig.TOP.value,
-            "search_mode": SearchMode.ANY,
+            "search_mode": SearchConfig.SEARCH_MODE.value,
             "query_type": SearchConfig.QUERY_TYPE.value,
             "select": SearchConfig.SELECT_FIELDS.value,
             "vector_queries": [
