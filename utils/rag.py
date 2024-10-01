@@ -3,6 +3,7 @@ from azure.search.documents import SearchClient
 from azure.core.credentials import AzureKeyCredential
 from utils.setting import settings
 from azure.search.documents.models import SearchMode, VectorizedQuery
+from utils.config import SearchConfig
 
 
 class RAGService:
@@ -27,13 +28,18 @@ class RAGService:
 
     def search_documents(self, query: str):
         search_options = {
-            "top": 3,
+            "top": SearchConfig.TOP.value,
             "search_mode": SearchMode.ANY,
-            "query_type": "full",
-            "select": ["title", "fullplot", "countries"],
+            "query_type": SearchConfig.QUERY_TYPE.value,
+            "select": SearchConfig.SELECT_FIELDS.value,
             "vector_queries": [
-                VectorizedQuery(vector=self.get_embeddings(query=query), kind="vector", k_nearest_neighbors=3,
-                                fields="vector")]
+                VectorizedQuery(
+                    vector=self.get_embeddings(query=query),
+                    kind=SearchConfig.VECTOR_KIND.value,
+                    k_nearest_neighbors=SearchConfig.K_NEAREST_NEIGHBORS.value,
+                    fields=SearchConfig.VECTOR_FIELD.value
+                )
+            ]
         }
         results = self.search_client.search(**search_options)
         retrieved_documents = []
