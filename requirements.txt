@@ -4,5 +4,5 @@ uvicorn~=0.30.6
 gunicorn==20.1.0
 azure-identity
 azure-search-documents
-
+pydantic-settings
 pydantic~=2.9.2
