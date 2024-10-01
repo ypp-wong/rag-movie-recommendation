@@ -2,7 +2,7 @@ from openai import AzureOpenAI
 from azure.search.documents import SearchClient
 from azure.core.credentials import AzureKeyCredential
 from utils.setting import settings
-from azure.search.documents.models import SearchMode, VectorizedQuery
+from azure.search.documents.models import VectorizedQuery
 from utils.config import SearchConfig
 
 
