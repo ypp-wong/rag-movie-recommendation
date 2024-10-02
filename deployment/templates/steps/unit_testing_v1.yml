@@ -29,7 +29,7 @@ steps:
   # Run tests with coverage.
   - bash: |
       export PYTHONPATH="${{parameters.baseDirectory}}:$PYTHONPATH"
-      pytest tests/ --doctest-modules --junitxml=junit/test-results.xml --cov=${{parameters.srcPath}} --cov-report xml:coverage.xml
+      python3 -m pytest tests/ --doctest-modules --junitxml=junit/test-results.xml --cov=${{parameters.srcPath}} --cov-report xml:coverage.xml
     displayName: Run tests with coverage
     workingDirectory: ${{parameters.testsPath}}
   
