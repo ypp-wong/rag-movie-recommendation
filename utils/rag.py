@@ -4,6 +4,7 @@ from azure.core.credentials import AzureKeyCredential
 from utils.setting import settings
 from azure.search.documents.models import VectorizedQuery
 from utils.config import SearchConfig
+from utils.transformation import JsonTransformation
 
 
 class RAGService:
@@ -62,6 +63,8 @@ class RAGService:
 
     def orchestrate_rag(self, user_query: str, grounded_prompt: str):
         relevant_data = self.search_documents(query=user_query)
-        ragged_query = grounded_prompt.format(query=user_query, data=relevant_data)
+        fields = ["@search.score", "@search.reranker_score", "@search.highlights", "@search.captions"]
+        filtered_data = JsonTransformation(json_data=relevant_data).filter_fields(fields_to_remove=fields)
+        ragged_query = grounded_prompt.format(query=user_query, data=filtered_data)
         response = self.generate_response(ragged_query)
         return {"response": response}

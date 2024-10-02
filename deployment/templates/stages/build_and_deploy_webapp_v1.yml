@@ -17,18 +17,18 @@ parameters:
     type: string
 
 stages:
-  # - stage: Test
-  #   jobs:
-  #     - job: Unit_test
-  #       displayName: 'Run Unit Tests - Python'
-  #       steps:
-  #         - template: ../steps/unit_testing_v1.yml
-  #           parameters:
-  #             baseDirectory: ${{parameters.baseDirectory}}
-  #             srcPath: ${{parameters.srcPath}}
-  #             testsPath: ${{parameters.testsPath}}
-  #             pythonVersion: ${{parameters.pythonVersion}}
-  
+  - stage: Test
+    jobs:
+      - job: Unit_test
+        displayName: 'Run Unit Tests - Python'
+        steps:
+          - template: ../steps/unit_testing_v1.yml
+            parameters:
+              baseDirectory: ${{parameters.baseDirectory}}
+              srcPath: ${{parameters.srcPath}}
+              testsPath: ${{parameters.testsPath}}
+              pythonVersion: ${{parameters.pythonVersion}}
+
   - stage: Build
     jobs:
       - job: BuildArtifacts
