@@ -14,7 +14,9 @@ steps:
     inputs:
       versionSpec: ${{parameters.pythonVersion}}
 
-  - script: pip install -r requirements.txt
+  - script: |
+      pip install -r requirements.txt
+      pip install unittest-xml-reporting coverage
     displayName: "Install dependencies"
 
   # Lint via pylint. We need to find all .py files under src/simple_package and run pylint to avoid errors
