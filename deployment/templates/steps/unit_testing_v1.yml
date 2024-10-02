@@ -14,9 +14,7 @@ steps:
     inputs:
       versionSpec: ${{parameters.pythonVersion}}
 
-  - script: |
-      pip install -r requirements.txt
-      pip install unittest-xml-reporting coverage
+  - script: pip install -r $(System.DefaultWorkingDirectory)/requirements.txt
     displayName: "Install dependencies"
 
   # Lint via pylint. We need to find all .py files under src/simple_package and run pylint to avoid errors
@@ -29,10 +27,12 @@ steps:
   #   workingDirectory: ${{parameters.srcPath}}
 
   # Run tests with coverage.
-  - script: |
-      python3 -m pytest --doctest-modules --junitxml=junit/test-results.xml --cov=${{parameters.srcPath}} --cov-report xml:coverage.xml
-    displayName: Run tests with coverage
-    workingDirectory: ${{parameters.testsPath}}
+  - bash: |
+      export PYTHONPATH=${{parameters.baseDirectory}}:$PYTHONPATH
+      export PYTHONPATH=$(System.DefaultWorkingDirectory):$PYTHONPATH
+      pytest --doctest-modules --junitxml=junit/test-results.xml --cov=${{parameters.srcPath}} --cov-report xml:coverage.xml --cov-report html
+      displayName: Run tests with coverage
+      workingDirectory: ${{parameters.testsPath}}
   
   #Publish the test results in DevOps
   - task: PublishTestResults@2
