@@ -6,3 +6,4 @@ azure-identity
 azure-search-documents
 pydantic-settings
 pydantic~=2.9.2
+pytest
